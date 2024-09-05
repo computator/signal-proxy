@@ -1,0 +1,48 @@
+# domain list from https://github.com/signalapp/Signal-TLS-Proxy/blob/main/data/nginx-relay/nginx.conf
+{{
+  $backends := dict
+    "chat" "chat"
+    "ud-chat" "ud-chat"
+    "storage" "storage"
+    "cdn" "cdn"
+    "cdn2" "cdn2"
+    "cdn3" "cdn3"
+    "cdsi" "cdsi"
+    "contentproxy" "contentproxy"
+    "sfu-voip" "sfu.voip"
+    "svr2" "svr2"
+    "updates" "updates"
+    "updates2" "updates2"
+    "backend1-svr3" "backend1.svr3"
+    "backend2-svr3" "backend2.svr3"
+    "backend3-svr3" "backend3.svr3"
+}}
+tcp:
+  routers:
+    in:
+      entryPoints:
+      - extern
+      rule: HostSNI(`{{ env "SIGNALPROXY_HOSTNAME" }}`)
+      service: unwrap
+      tls:
+        certResolver: letsencrypt{{ if env "SIGNALPROXY_PROD_ACME" }}{{ else }}-staging{{ end }}
+    {{ range $t, $d := $backends }}
+    tgt-signal-{{ $t }}:
+      entryPoints:
+      - local
+      rule: HostSNI(`{{ $d }}.signal.org`)
+      service: fwd-signal-{{ $t }}
+      tls:
+        passthrough: true
+    {{ end }}
+  services:
+    unwrap:
+      loadBalancer:
+        servers:
+        - address: 127.0.0.1:2443
+    {{ range $t, $d := $backends }}
+    fwd-signal-{{ $t }}:
+      loadBalancer:
+        servers:
+        - address: {{ $d }}.signal.org:443
+    {{ end }}

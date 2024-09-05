@@ -1,0 +1,22 @@
+log:
+  level: INFO
+accesslog: {}
+entrypoints:
+  extern:
+    address: :443
+  local:
+    address: 127.0.0.1:2443
+certificatesResolvers:
+  letsencrypt-staging:
+    acme:
+      storage: /acme/acme.json
+      tlsChallenge: {}
+      caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+  letsencrypt:
+    acme:
+      storage: /acme/acme.json
+      # email: test@test.com
+      tlsChallenge: {}
+providers:
+  file:
+    filename: traefik.dynamic.yaml

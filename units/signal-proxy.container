@@ -1,0 +1,15 @@
+[Unit]
+Description=Signal Proxy
+
+[Container]
+Image=ghcr.io/computator/signal-proxy
+AutoUpdate=registry
+
+PublishPort=443:443
+
+Environment=SIGNALPROXY_HOSTNAME=sp.example.com
+# Environment=SIGNALPROXY_PROD_ACME=1
+Volume=signal-proxy-certs:/acme
+
+[Install]
+WantedBy=multi-user.target
