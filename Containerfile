@@ -1,4 +1,4 @@
-FROM docker.io/library/traefik:v3.1
+FROM docker.io/library/traefik:v3.2
 
 LABEL org.opencontainers.image.source=https://github.com/computator/signal-proxy
 
