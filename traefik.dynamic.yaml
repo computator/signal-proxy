@@ -13,9 +13,6 @@
     "svr2" "svr2"
     "updates" "updates"
     "updates2" "updates2"
-    "backend1-svr3" "backend1.svr3"
-    "backend2-svr3" "backend2.svr3"
-    "backend3-svr3" "backend3.svr3"
 }}
 tcp:
   routers:
