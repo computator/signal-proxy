@@ -4,10 +4,11 @@ on:
     branches:
       - main
   schedule:
-    - cron: 40 3 * * 0
+   - cron: 40 3 * * 0
+  workflow_dispatch:
 jobs:
   build:
-    runs-on: ubuntu-24.04 # uses podman from 24.04 or later
+    runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io
       IMAGE: ghcr.io/${{ github.repository_owner }}/signal-proxy
@@ -16,11 +17,6 @@ jobs:
       # find cached build layers after a save/load cycle
       BUILDAH_FORMAT: docker
     steps:
-      - env:
-          USERNAME: ${{ github.actor }}
-          PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        run: printenv PASSWORD | podman login -v ${{ env.REGISTRY }} -u "$USERNAME" --password-stdin
-
       - id: restore-cache
         uses: actions/cache/restore@v4
         with:
@@ -41,6 +37,11 @@ jobs:
           echo "Image Status:"
           podman image list
           echo "IMPORTED_CONTAINERS=$(podman image list -q --sort id | xargs)" >> "$GITHUB_ENV"
+
+      - env:
+          USERNAME: ${{ github.actor }}
+          PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: printenv PASSWORD | podman login -v ${{ env.REGISTRY }} -u "$USERNAME" --password-stdin
 
       - uses: actions/checkout@v4
 
