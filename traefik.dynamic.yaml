@@ -2,13 +2,13 @@
 {{
   $backends := dict
     "chat" "chat"
-    "ud-chat" "ud-chat"
     "storage" "storage"
     "cdn" "cdn"
     "cdn2" "cdn2"
     "cdn3" "cdn3"
     "cdsi" "cdsi"
     "contentproxy" "contentproxy"
+    "grpc-chat" "grpc.chat"
     "sfu-voip" "sfu.voip"
     "svr2" "svr2"
     "svrb" "svrb"
